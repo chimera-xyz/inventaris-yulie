@@ -174,7 +174,7 @@
     }
 
     .sidebar-account {
-        display: none;
+        display: grid;
         margin-top: auto;
         gap: 0.8rem;
         border-top: 1px solid var(--line);
@@ -1914,19 +1914,6 @@
         .attention-stat,
         .timeline-item {
             padding: 0.9rem;
-        }
-
-        .topbar-user {
-            display: none;
-        }
-
-        .topbar-user form,
-        .topbar-user .btn {
-            width: 100%;
-        }
-
-        .sidebar-account {
-            display: grid;
         }
 
         .attention-grid {

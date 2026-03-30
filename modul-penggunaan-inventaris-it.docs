@@ -1,0 +1,148 @@
+# Modul Penggunaan Web Inventaris IT
+
+## 1. Fungsi Sistem
+
+Web ini adalah sistem inventaris internal untuk mencatat dan memantau asset IT Yulie Sekuritas. Sistem dipakai untuk mengelola kategori, data asset, status pemakaian, lokasi, pengguna saat ini, foto, garansi, riwayat peristiwa, serta QR code asset.
+
+Fitur utama yang aktif di website saat ini:
+- Login internal untuk admin/petugas inventaris.
+- Dashboard ringkasan jumlah asset, kategori, status asset, nilai asset, aktivitas terbaru, dan pengingat garansi.
+- Master data kategori untuk pengelompokan asset dan pembentukan kode asset.
+- Pencatatan asset lengkap beserta detail teknis dan operasional.
+- Pencarian, filter, edit, dan pemantauan detail asset.
+- Pencetakan QR, kode asset, dan label asset.
+- Riwayat asset untuk maintenance, servis, relokasi, penyerahan, insiden, atau catatan.
+- Export asset terpilih ke Excel atau PDF.
+- Halaman publik hasil scan QR tanpa login.
+
+Catatan: pada kode terdapat struktur data peminjaman, tetapi menu peminjaman belum aktif di website. Karena itu, modul ini hanya membahas fitur yang tersedia di UI saat ini.
+
+## 2. Menu Utama
+
+- `Dashboard`: melihat ringkasan kondisi inventaris.
+- `Assets`: melihat, mencari, menambah, mengubah, dan mengekspor data asset.
+- `Categories`: mengelola kategori asset.
+- `Keluar`: logout dari sistem.
+
+## 3. Alur Penggunaan Website
+
+### A. Login ke Sistem
+
+1. Buka halaman login.
+2. Masukkan email dan password akun internal.
+3. Klik `Masuk`.
+4. Jika berhasil, pengguna diarahkan ke `Dashboard`.
+
+### B. Membaca Dashboard
+
+Setelah login, pengguna masuk ke `Dashboard`. Halaman ini menampilkan:
+- total asset yang tercatat,
+- jumlah asset tersedia dan sedang dipakai,
+- jumlah kategori,
+- nilai total asset,
+- asset yang perlu perhatian seperti rusak, maintenance, atau hilang,
+- pengingat garansi yang mendekati berakhir,
+- aktivitas perubahan asset terbaru.
+
+### C. Menyiapkan Kategori
+
+Sebelum menambah asset, pengguna sebaiknya membuat kategori lebih dulu melalui menu `Categories`.
+
+Langkah pakai:
+1. Buka `Categories`.
+2. Klik `Tambah Kategori`.
+3. Isi kode kategori, nama kategori, dan deskripsi bila perlu.
+4. Simpan data.
+
+Fungsi kategori:
+- mengelompokkan jenis asset,
+- menjadi dasar pembentukan kode unik asset,
+- mempermudah filter dan pelaporan.
+
+Catatan penting:
+- kode kategori otomatis dipakai sebagai bagian dari kode asset,
+- kategori yang masih memiliki asset tidak bisa dihapus.
+
+### D. Menambah Asset Baru
+
+Masuk ke menu `Assets`, lalu klik `Tambah Asset`.
+
+Data yang bisa dicatat saat menambah asset:
+- kategori,
+- nama asset,
+- status asset,
+- brand, model, serial number,
+- tanggal beli,
+- informasi garansi,
+- nilai asset,
+- lokasi,
+- pengguna saat ini, divisi, nomor telepon, dan tanggal mulai dipakai,
+- spesifikasi lengkap,
+- catatan internal,
+- foto asset.
+
+Setelah disimpan, sistem akan:
+- membuat kode unik asset secara otomatis berdasarkan kategori dan tahun,
+- membuat QR code asset,
+- menyimpan jejak audit perubahan,
+- menampilkan halaman detail asset.
+
+### E. Mengelola Asset yang Sudah Tercatat
+
+Pada menu `Assets`, pengguna bisa:
+- mencari asset berdasarkan nama, kode, serial number, brand, model, atau lokasi,
+- memfilter berdasarkan kategori dan status,
+- membuka `Detail`,
+- klik `Edit` untuk memperbarui data.
+
+Status asset yang dipakai sistem saat ini:
+- `Tersedia`
+- `Sedang Dipakai`
+- `Rusak`
+- `Perbaikan`
+- `Hilang`
+
+Di halaman `Detail Asset`, pengguna bisa melihat:
+- profil asset,
+- spesifikasi lengkap,
+- pengguna saat ini,
+- catatan internal,
+- foto asset,
+- QR code,
+- riwayat asset,
+- log perubahan sistem.
+
+### F. Riwayat, QR, dan Label
+
+Dari halaman detail, pengguna dapat:
+- menambah riwayat asset,
+- mengedit riwayat yang sudah ada,
+- mencetak `Print QR`,
+- mencetak `Print Kode`,
+- mencetak `Print Label`,
+- melakukan `Generate Ulang` QR bila diperlukan.
+
+Riwayat asset dipakai untuk mencatat maintenance, servis, relokasi, penyerahan, insiden, atau catatan lain yang berhubungan dengan asset.
+
+Saat QR discan, sistem membuka halaman publik asset tanpa login. Halaman ini menampilkan identitas asset, status, foto, spesifikasi, pengguna saat ini, dan riwayat singkat. Fitur ini berguna untuk pengecekan cepat di lapangan.
+
+### G. Export Data dan Logout
+
+Pada daftar `Assets`, pengguna dapat memilih beberapa asset lalu klik `Export Pilihan`. Format yang tersedia:
+- `Excel` untuk data spreadsheet,
+- `PDF` untuk dokumen asset.
+
+Jika pekerjaan selesai, klik `Keluar` untuk logout agar sesi tidak tetap terbuka.
+
+## 4. Rekomendasi Cara Pakai Harian
+
+Urutan pemakaian yang disarankan:
+1. Login.
+2. Cek `Dashboard`.
+3. Pastikan `Categories` sudah benar.
+4. Tambah atau edit data di `Assets`.
+5. Lengkapi foto, pengguna, lokasi, dan status.
+6. Tambahkan `Riwayat Asset` bila ada maintenance atau perpindahan.
+7. Cetak QR atau label untuk ditempel pada barang.
+8. Gunakan export bila perlu laporan.
+9. Logout.

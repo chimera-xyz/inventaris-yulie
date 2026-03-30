@@ -6,6 +6,7 @@
 @section('page-subtitle', '')
 
 @section('page-actions')
+    <button type="button" class="btn btn--secondary" data-single-export-open>Export Asset</button>
     <a href="{{ route('items.print-qr', $item) }}" target="_blank" class="btn btn--secondary">Print QR</a>
     <a href="{{ route('items.print-code', $item) }}" target="_blank" class="btn btn--secondary">Print Kode</a>
     <a href="{{ route('items.print-label', $item) }}" target="_blank" class="btn btn--secondary">Print Label</a>
@@ -361,6 +362,37 @@
 
         </div>
     </div>
+
+    <div class="modal-backdrop" data-single-export-modal hidden>
+        <div class="modal-card">
+            <div class="modal-card__header">
+                <div>
+                    <div class="modal-card__eyebrow">Export Asset</div>
+                    <h2 class="modal-card__title">{{ $item->unique_code }}</h2>
+                    <div class="modal-card__count">Asset ini akan diexport sesuai format yang dipilih.</div>
+                </div>
+                <button type="button" class="modal-card__close" data-single-export-close aria-label="Tutup">x</button>
+            </div>
+
+            <div class="export-format-grid">
+                <button type="button" class="export-format-card" data-single-export-submit="excel">
+                    <span class="export-format-card__eyebrow">Spreadsheet</span>
+                    <span class="export-format-card__title">Excel</span>
+                </button>
+
+                <button type="button" class="export-format-card" data-single-export-submit="pdf">
+                    <span class="export-format-card__eyebrow">Document Pack</span>
+                    <span class="export-format-card__title">PDF</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <form action="{{ route('items.export-selected') }}" method="POST" id="item-single-export-form">
+        @csrf
+        <input type="hidden" name="format" value="" data-single-export-format>
+        <input type="hidden" name="item_ids[]" value="{{ $item->id }}">
+    </form>
 
     @if(session('asset_created_modal') === $item->unique_code)
         <div class="modal-backdrop" data-modal>

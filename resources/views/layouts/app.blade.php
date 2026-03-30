@@ -55,6 +55,15 @@
                     </span>
                     Categories
                 </a>
+
+                <a href="{{ route('activities.index') }}" class="nav-link {{ request()->routeIs('activities.*') ? 'nav-link--active' : '' }}">
+                    <span class="nav-link__icon">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m-6 9l2 2 4-4" />
+                        </svg>
+                    </span>
+                    Aktivitas
+                </a>
             </nav>
 
             <div class="sidebar-account">
@@ -102,17 +111,6 @@
                         <div class="topbar-badge">
                             <span class="topbar-badge__dot"></span>
                             {{ now()->translatedFormat('d M Y') }}
-                        </div>
-
-                        <div class="topbar-user">
-                            <div class="topbar-user__meta">
-                                <div class="topbar-user__label">Internal Access</div>
-                                <div class="topbar-user__name">{{ auth()->user()?->name }}</div>
-                            </div>
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn--secondary">Keluar</button>
-                            </form>
                         </div>
                     </div>
                 </div>

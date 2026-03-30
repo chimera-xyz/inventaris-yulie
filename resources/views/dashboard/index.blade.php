@@ -157,8 +157,11 @@
         <div class="section-header">
             <div>
                 <h2 class="section-title">Aktivitas Terbaru</h2>
-                <p class="section-subtitle">Perubahan terakhir pada asset.</p>
+                <p class="section-subtitle">Menampilkan 3 perubahan terakhir pada asset.</p>
             </div>
+            @if($hasMoreRecentLogs)
+                <a href="{{ route('activities.index') }}" class="btn btn--secondary">Lihat Semua Aktivitas</a>
+            @endif
         </div>
 
         <div class="section-body">

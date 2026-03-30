@@ -83,8 +83,8 @@
             }
 
             .qr-image {
-                width: 74mm;
-                height: 74mm;
+                width: 40mm;
+                height: 40mm;
             }
 
             .print-button {

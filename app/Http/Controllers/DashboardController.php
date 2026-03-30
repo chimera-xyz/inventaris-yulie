@@ -11,6 +11,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $recentLogLimit = 3;
+
         $statusCounts = Item::query()
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
@@ -37,8 +39,10 @@ class DashboardController extends Controller
 
         $recentLogs = ItemLog::with(['item.category', 'user'])
             ->latest()
-            ->take(8)
+            ->take($recentLogLimit)
             ->get();
+
+        $hasMoreRecentLogs = ItemLog::count() > $recentLogLimit;
 
         $warrantyAlerts = Item::with('category')
             ->where('has_warranty', true)
@@ -61,6 +65,7 @@ class DashboardController extends Controller
             'warrantyAlertCount',
             'recentItems',
             'recentLogs',
+            'hasMoreRecentLogs',
             'warrantyAlerts'
         ));
     }

@@ -9,17 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeModal = document.querySelector('[data-modal]');
     const photoManagers = document.querySelectorAll('[data-photo-manager]');
     const exportManager = document.querySelector('[data-export-manager]');
+    const singleExportModal = document.querySelector('[data-single-export-modal]');
 
     const syncBodyScrollLock = () => {
         const isDesktop = window.innerWidth >= 1024;
         const sidebarOpen = sidebar?.getAttribute('data-open') === 'true' && !isDesktop;
         const exportModalOpen = document.querySelector('[data-export-modal]:not([hidden])');
+        const singleAssetExportModalOpen = document.querySelector('[data-single-export-modal]:not([hidden])');
         const mobileSelectOpen = document.querySelector('[data-mobile-select-sheet]:not([hidden])');
         const pageModalOpen = document.querySelector('[data-modal]');
 
         document.body.classList.toggle(
             'overflow-hidden',
-            Boolean(sidebarOpen || exportModalOpen || mobileSelectOpen || pageModalOpen)
+            Boolean(sidebarOpen || exportModalOpen || singleAssetExportModalOpen || mobileSelectOpen || pageModalOpen)
         );
     };
 
@@ -829,6 +831,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
         syncCheckboxes();
         updateExportState();
+    }
+
+    if (singleExportModal) {
+        const openButtons = document.querySelectorAll('[data-single-export-open]');
+        const closeButtons = singleExportModal.querySelectorAll('[data-single-export-close]');
+        const submitButtons = singleExportModal.querySelectorAll('[data-single-export-submit]');
+        const form = document.querySelector('#item-single-export-form');
+        const formatInput = form?.querySelector('[data-single-export-format]');
+
+        const openModal = () => {
+            singleExportModal.hidden = false;
+            syncBodyScrollLock();
+        };
+
+        const closeModal = () => {
+            singleExportModal.hidden = true;
+            syncBodyScrollLock();
+        };
+
+        openButtons.forEach((button) => {
+            button.addEventListener('click', openModal);
+        });
+
+        closeButtons.forEach((button) => {
+            button.addEventListener('click', closeModal);
+        });
+
+        singleExportModal.addEventListener('click', (event) => {
+            if (event.target === singleExportModal) {
+                closeModal();
+            }
+        });
+
+        submitButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                if (!form || !formatInput) {
+                    return;
+                }
+
+                formatInput.value = button.getAttribute('data-single-export-submit') ?? '';
+                form.submit();
+            });
+        });
     }
 
     photoManagers.forEach((manager) => {
