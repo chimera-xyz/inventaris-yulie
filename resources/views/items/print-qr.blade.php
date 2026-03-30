@@ -92,8 +92,8 @@
             }
 
             .unique-code {
-                margin-top: 12px;
-                font-size: 18px;
+                margin-top: 3px;
+                font-size: 20px;
             }
         }
     </style>
