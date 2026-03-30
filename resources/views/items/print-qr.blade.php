@@ -41,6 +41,15 @@
             height: 100%;
         }
 
+        .unique-code {
+            margin-top: 24px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
         .print-button {
             display: inline-flex;
             align-items: center;
@@ -81,6 +90,11 @@
             .print-button {
                 display: none;
             }
+
+            .unique-code {
+                margin-top: 12px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -89,6 +103,7 @@
         <div class="qr-image" aria-label="QR {{ $item->unique_code }}">
             {!! $item->renderQrCodeSvg() !!}
         </div>
+        <div class="unique-code">{{ $item->unique_code }}</div>
         <button onclick="window.print()" class="print-button">Print</button>
     </div>
 </body>
