@@ -306,18 +306,22 @@ class ItemController extends Controller
     private function generateUniqueCode(Category $category, ?Item $ignoreItem = null): string
     {
         $year = $this->resolveCodeYear($ignoreItem);
-        $prefix = sprintf('%s-%d-', $category->code, $year);
+        $prefix = sprintf('%s-', $category->code);
+        $suffix = sprintf('-%d', $year);
         $counter = Item::withTrashed()
             ->where('category_id', $category->getKey())
-            ->where('unique_code', 'like', $prefix . '%')
+            ->where('unique_code', 'like', $prefix . '%' . $suffix)
             ->when($ignoreItem, fn ($query) => $query->whereKeyNot($ignoreItem->getKey()))
             ->pluck('unique_code')
-            ->map(fn (string $code) => (int) Str::afterLast($code, '-'))
+            ->map(function (string $code) use ($suffix) {
+                $codeWithoutSuffix = str_replace($suffix, '', $code);
+                return (int) Str::afterLast($codeWithoutSuffix, '-');
+            })
             ->max() ?? 0;
 
         $counter++;
 
-        return sprintf('%s-%d-%04d', $category->code, $year, $counter);
+        return sprintf('%s-%04d-%d', $category->code, $counter, $year);
     }
 
     private function resolveCodeYear(?Item $item = null): int

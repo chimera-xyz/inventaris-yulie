@@ -38,7 +38,7 @@ class ItemUniqueCodeGenerationTest extends TestCase
         ])->assertRedirect();
 
         $this->assertSame(
-            ['MON-2026-0001', 'MON-2026-0002'],
+            ['MON-0001-2026', 'MON-0002-2026'],
             Item::query()->orderBy('id')->pluck('unique_code')->all()
         );
 
@@ -64,7 +64,7 @@ class ItemUniqueCodeGenerationTest extends TestCase
 
         $existingLanItem = Item::create([
             'category_id' => $lan->id,
-            'unique_code' => 'LAN-2026-0001',
+            'unique_code' => 'LAN-0001-2026',
             'name' => 'Switch Core',
             'status' => 'available',
             'created_at' => Carbon::parse('2026-03-26 09:00:00'),
@@ -73,7 +73,7 @@ class ItemUniqueCodeGenerationTest extends TestCase
 
         $item = Item::create([
             'category_id' => $monitor->id,
-            'unique_code' => 'MON-2026-0001',
+            'unique_code' => 'MON-0001-2026',
             'name' => 'Monitor Trading',
             'status' => 'available',
             'created_at' => Carbon::parse('2026-03-27 09:00:00'),
@@ -86,13 +86,13 @@ class ItemUniqueCodeGenerationTest extends TestCase
             'category_id' => $lan->id,
             'name' => 'Monitor Trading',
             'status' => 'available',
-        ])->assertRedirect(route('items.show', 'LAN-2026-0002'));
+        ])->assertRedirect(route('items.show', 'LAN-0002-2026'));
 
         $item->refresh();
         $existingLanItem->refresh();
 
-        $this->assertSame('LAN-2026-0001', $existingLanItem->unique_code);
-        $this->assertSame('LAN-2026-0002', $item->unique_code);
+        $this->assertSame('LAN-0001-2026', $existingLanItem->unique_code);
+        $this->assertSame('LAN-0002-2026', $item->unique_code);
 
         $this->travelBack();
     }
