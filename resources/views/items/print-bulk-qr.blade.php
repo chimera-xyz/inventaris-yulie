@@ -25,14 +25,48 @@
             page-break-after: always;
             padding: 0;
             min-height: 273mm;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(6, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 3mm;
         }
 
         .print-page:last-child {
             page-break-after: avoid;
+        }
+
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            gap: 3mm;
+        }
+
+        .qr-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 2mm;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 2mm;
+        }
+
+        .qr-grid {
+            display: grid;
+            gap: 3mm;
+        }
+
+        .qr-grid--large {
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+        }
+
+        .qr-grid--medium {
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+        }
+
+        .qr-grid--small {
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(10, 1fr);
         }
 
         .qr-label {
@@ -143,6 +177,10 @@
                 display: none;
             }
 
+            .qr-section-title {
+                display: none;
+            }
+
             .print-container {
                 padding: 0;
             }
@@ -155,41 +193,92 @@
             .print-page:last-child {
                 page-break-after: avoid;
             }
+
+            .qr-section {
+                gap: 2mm;
+            }
         }
     </style>
 </head>
 <body>
     <div class="info-text">
-        Total {{ count($items) }} QR codes akan dicetak. Setiap halaman A4 berisi QR codes dengan ukuran yang disesuaikan berdasarkan kategori.
+        Total {{ count($items) }} QR codes akan dicetak. QR codes dikelompokkan berdasarkan ukuran untuk efisiensi kertas.
     </div>
 
     <div class="print-container">
         @php
-            $itemsPerPage = 24;
-            $pages = array_chunk($items->all(), $itemsPerPage);
+            // Group items by QR size
+            $largeItems = $items->filter(fn($item) => $item->getQrSizeInMm() === 40);
+            $mediumItems = $items->filter(fn($item) => $item->getQrSizeInMm() === 20);
+            $smallItems = $items->filter(fn($item) => $item->getQrSizeInMm() === 10);
+
+            // Calculate pages for each size
+            $largePerPage = 24;  // 4x6 grid
+            $mediumPerPage = 48; // 6x8 grid
+            $smallPerPage = 80;  // 8x10 grid
+
+            $largePages = $largeItems->chunk($largePerPage);
+            $mediumPages = $mediumItems->chunk($mediumPerPage);
+            $smallPages = $smallItems->chunk($smallPerPage);
+
+            // Get max pages
+            $maxPages = max(count($largePages), count($mediumPages), count($smallPages));
         @endphp
 
-        @foreach($pages as $pageItems)
+        @for($page = 0; $page < $maxPages; $page++)
             <div class="print-page">
-                @foreach($pageItems as $item)
-                    @php
-                        $qrSize = $item->getQrSizeInMm();
-                        $fontSize = $qrSize > 20 ? 20 : ($qrSize > 10 ? 14 : 10);
-                    @endphp
-                    <div class="qr-label" style="--qr-size: {{ $qrSize }}mm; --font-size: {{ $fontSize }}px;">
-                        <div class="qr-image" aria-label="QR {{ $item->unique_code }}">
-                            {!! $item->renderQrCodeSvg() !!}
+                {{-- Large QR Section --}}
+                @if(isset($largePages[$page]))
+                    <div class="qr-section">
+                        <div class="qr-section-title">QR BESAR (40mm) - {{ $largePages[$page]->count() }} items</div>
+                        <div class="qr-grid qr-grid--large">
+                            @foreach($largePages[$page] as $item)
+                                <div class="qr-label" style="--qr-size: 40mm; --font-size: 20px;">
+                                    <div class="qr-image" aria-label="QR {{ $item->unique_code }}">
+                                        {!! $item->renderQrCodeSvg() !!}
+                                    </div>
+                                    <div class="unique-code">{{ $item->unique_code }}</div>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="unique-code">{{ $item->unique_code }}</div>
                     </div>
-                @endforeach
+                @endif
 
-                {{-- Fill empty slots for complete grid --}}
-                @for($i = count($pageItems); $i < $itemsPerPage; $i++)
-                    <div class="qr-label"></div>
-                @endfor
+                {{-- Medium QR Section --}}
+                @if(isset($mediumPages[$page]))
+                    <div class="qr-section">
+                        <div class="qr-section-title">QR SEDANG (20mm) - {{ $mediumPages[$page]->count() }} items</div>
+                        <div class="qr-grid qr-grid--medium">
+                            @foreach($mediumPages[$page] as $item)
+                                <div class="qr-label" style="--qr-size: 20mm; --font-size: 14px;">
+                                    <div class="qr-image" aria-label="QR {{ $item->unique_code }}">
+                                        {!! $item->renderQrCodeSvg() !!}
+                                    </div>
+                                    <div class="unique-code">{{ $item->unique_code }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                {{-- Small QR Section --}}
+                @if(isset($smallPages[$page]))
+                    <div class="qr-section">
+                        <div class="qr-section-title">QR KECIL (10mm) - {{ $smallPages[$page]->count() }} items</div>
+                        <div class="qr-grid qr-grid--small">
+                            @foreach($smallPages[$page] as $item)
+                                <div class="qr-label" style="--qr-size: 10mm; --font-size: 10px;">
+                                    <div class="qr-image" aria-label="QR {{ $item->unique_code }}">
+                                        {!! $item->renderQrCodeSvg() !!}
+                                    </div>
+                                    <div class="unique-code">{{ $item->unique_code }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
-        @endforeach
+        @endfor
     </div>
 
     <div class="print-controls">
