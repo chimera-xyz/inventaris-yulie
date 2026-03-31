@@ -181,6 +181,25 @@ class ItemController extends Controller
         return view('items.print-label', compact('item'));
     }
 
+    public function printBulkQRCode(Request $request)
+    {
+        $validated = $request->validate([
+            'item_ids' => 'required|array',
+            'item_ids.*' => 'exists:items,id',
+        ]);
+
+        $items = Item::whereIn('id', $validated['item_ids'])
+            ->with('category')
+            ->get();
+
+        foreach ($items as $item) {
+            $item->ensureQrCodeIsAvailable();
+            $item->log('qr_printed', notes: 'QR code dicetak untuk item ' . $item->unique_code);
+        }
+
+        return view('items.print-bulk-qr', compact('items'));
+    }
+
     public function destroyPhotos(Request $request, Item $item): RedirectResponse
     {
         $validated = $request->validate([

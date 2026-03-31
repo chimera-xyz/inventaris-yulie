@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/items/{item}/print-qr', [ItemController::class, 'printQRCode'])->name('items.print-qr');
     Route::get('/items/{item}/print-code', [ItemController::class, 'printCode'])->name('items.print-code');
     Route::get('/items/{item}/print-label', [ItemController::class, 'printLabel'])->name('items.print-label');
+    Route::post('/items/print-bulk-qr', [ItemController::class, 'printBulkQRCode'])->name('items.print-bulk-qr');
 
     Route::delete('/items/{item}/photos', [ItemController::class, 'destroyPhotos'])->name('items.photos.destroy');
     Route::post('/items/{item}/histories', [ItemHistoryController::class, 'store'])->name('items.histories.store');

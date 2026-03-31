@@ -70,6 +70,7 @@
                 <button type="button" class="btn btn--secondary" data-export-select-page>Pilih Halaman Ini</button>
                 <button type="button" class="btn btn--secondary" data-export-clear>Hapus Pilihan</button>
                 <button type="button" class="btn btn--primary" data-export-open disabled>Export Pilihan</button>
+                <button type="button" class="btn btn--primary" data-print-bulk-qr disabled data-print-bulk-qr>Cetak QR Pilihan</button>
             </div>
         </div>
 

@@ -233,6 +233,18 @@ class Item extends Model
         return true;
     }
 
+    public function getQrSizeInMm(): int
+    {
+        $qrSize = $this->category->qr_size ?? 'large';
+
+        return match($qrSize) {
+            'small' => 10,
+            'medium' => 20,
+            'large' => 40,
+            default => 40,
+        };
+    }
+
     public function log(string $action, ?string $field = null, ?string $oldValue = null, ?string $newValue = null, ?string $notes = null): ItemLog
     {
         return ItemLog::create([

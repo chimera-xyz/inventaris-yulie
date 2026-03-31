@@ -676,6 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectPage = exportManager.querySelector('[data-export-select-page]');
         const clear = exportManager.querySelector('[data-export-clear]');
         const open = exportManager.querySelector('[data-export-open]');
+        const printBulkQrButton = exportManager.querySelector('[data-print-bulk-qr]');
         const modal = document.querySelector('[data-export-modal]');
         const closeButtons = modal?.querySelectorAll('[data-export-close]') ?? [];
         const submitButtons = modal?.querySelectorAll('[data-export-submit]') ?? [];
@@ -739,6 +740,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (open) {
                 open.disabled = selectedCount === 0;
             }
+
+            if (printBulkQrButton) {
+                printBulkQrButton.disabled = selectedCount === 0;
+            }
         };
 
         const setSelectedIds = (ids) => {
@@ -746,6 +751,11 @@ document.addEventListener('DOMContentLoaded', () => {
             syncCheckboxes();
             updateExportState();
         };
+
+        // Make functions available globally for bulk print functionality
+        window.readSelectedIds = readSelectedIds;
+        window.updateExportState = updateExportState;
+        window.setSelectedIds = setSelectedIds;
 
         const openModal = () => {
             if (!modal || readSelectedIds().length === 0) {
@@ -796,6 +806,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
         open?.addEventListener('click', openModal);
 
+        printBulkQrButton?.addEventListener('click', () => {
+            console.log('=== START: Bulk Print QR Clicked ===');
+
+            const selectedIds = window.readSelectedIds();
+            console.log('Selected IDs:', selectedIds);
+            console.log('Selected IDs type:', typeof selectedIds);
+            console.log('Selected IDs length:', selectedIds.length);
+
+            if (!selectedIds || selectedIds.length === 0) {
+                console.log('ERROR: No items selected or invalid selection');
+                alert('Pilih minimal 1 asset untuk cetak QR Code!');
+                return;
+            }
+
+            console.log('Creating form for bulk print...');
+
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/items/print-bulk-qr';
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            console.log('CSRF Token found:', !!csrfToken);
+
+            if (csrfToken) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+                console.log('CSRF token added to form');
+            }
+
+            selectedIds.forEach((id, index) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'item_ids[]';
+                input.value = id;
+                form.appendChild(input);
+                console.log(`Added item ID ${index + 1}: ${id}`);
+            });
+
+            console.log('Form ready, total inputs:', form.querySelectorAll('input').length);
+            console.log('Form action:', form.action);
+
+            document.body.appendChild(form);
+            console.log('Form submitted to body');
+
+            form.submit();
+            console.log('Form submitted!');
+
+            // Wait a moment and check if navigation happened
+            setTimeout(() => {
+                console.log('Checking if navigation to print page occurred...');
+            }, 100);
+        });
+
         closeButtons.forEach((button) => {
             button.addEventListener('click', closeModal);
         });
@@ -808,7 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         submitButtons.forEach((button) => {
             button.addEventListener('click', () => {
-                const selectedIds = readSelectedIds();
+                const selectedIds = window.readSelectedIds();
 
                 if (!form || !formatInput || !hiddenInputs || selectedIds.length === 0) {
                     return;

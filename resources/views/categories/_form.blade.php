@@ -36,6 +36,19 @@
                         <div class="form-error">{{ $message }}</div>
                     @enderror
                 </div>
+
+                <div class="form-field">
+                    <label for="qr_size" class="form-label">Ukuran QR *</label>
+                    <select id="qr_size" name="qr_size" class="form-input" required>
+                        <option value="large" {{ old('qr_size', $category?->qr_size) === 'large' ? 'selected' : '' }}>Besar (40mm) - Monitor, Printer, Router</option>
+                        <option value="medium" {{ old('qr_size', $category?->qr_size) === 'medium' ? 'selected' : '' }}>Sedang (20mm) - Keyboard, Laptop</option>
+                        <option value="small" {{ old('qr_size', $category?->qr_size) === 'small' ? 'selected' : '' }}>Kecil (10mm) - Mouse, Kabel, Aksesoris</option>
+                    </select>
+                    <div class="form-help">Ukuran QR akan disesuaikan otomatis saat mencetak berdasarkan kategori ini.</div>
+                    @error('qr_size')
+                        <div class="form-error">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <div class="form-field">
