@@ -9,11 +9,15 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
+        $adminEmail = env('INVENTARIS_ADMIN_EMAIL', 'admin@yulie.local');
+        $adminName = env('INVENTARIS_ADMIN_NAME', 'Admin Inventaris');
+        $adminPassword = env('INVENTARIS_ADMIN_PASSWORD', 'inventaris123');
+
         User::query()->updateOrCreate(
-            ['email' => env('INVENTARIS_ADMIN_EMAIL', 'admin@yulie.local')],
+            ['email' => $adminEmail],
             [
-                'name' => env('INVENTARIS_ADMIN_NAME', 'Admin Inventaris'),
-                'password' => env('INVENTARIS_ADMIN_PASSWORD', 'inventaris123'),
+                'name' => $adminName,
+                'password' => bcrypt($adminPassword),
             ]
         );
     }
